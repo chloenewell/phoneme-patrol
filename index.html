@@ -80,6 +80,15 @@
   .shot-section .eyebrow{color:var(--blue); margin-bottom:10px;}
   .shot-section h2{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(26px,3.6vw,38px); margin:0 0 14px;}
   .shot-section p.lead{font-size:16.5px; color:var(--ink-soft); max-width:60ch; margin:0 0 34px;}
+
+  .stat-highlight{
+    position:relative; display:inline-block; padding:14px 28px; margin:2px 6px 30px 0;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px; color:var(--ink);
+  }
+  .stat-highlight .stat-svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; z-index:0;}
+  .stat-highlight .stat-svg path{fill:none; stroke:var(--blue); stroke-width:4.5; stroke-linecap:round; transition:stroke-dashoffset 1.1s ease;}
+  .stat-highlight span{position:relative; z-index:1;}
+  .stat-highlight.on-dark{color:var(--white);}
   .shot-frame{border-radius:8px; overflow:hidden; box-shadow:0 24px 60px rgba(24,35,58,0.18); border:1px solid rgba(24,35,58,0.08);}
   .shot-frame img{display:block; width:100%; height:auto;}
   .shot-section.alt{background:var(--off-white);}
@@ -168,6 +177,7 @@
     <span class="eyebrow">The Core Loop</span>
     <h2>One extra tap. A completely different signal.</h2>
     <p class="lead">Before ABC celebrates, the child answers one more question: <em>I know it, I think so, or I'm guessing?</em> That single tap is what the rest of the system runs on.</p>
+    <div class="stat-highlight"><svg class="stat-svg"></svg><span>1 extra tap, 3-way adaptive signal</span></div>
     <div class="shot-frame"><img src="core-loop.jpg" alt="Confidence Check gameplay mockup — child taps a letter, then rates how sure they were, full design annotations included"></div>
   </div>
 </section>
@@ -201,6 +211,7 @@
     <span class="eyebrow">Why Kids Come Back</span>
     <h2>Progress they can see, not a number that resets.</h2>
     <p class="lead">Materials earned from each phoneme run go straight into rebuilding ABC's town — a bridge, a library, a treehouse. Visible, permanent change beats an abstract coin counter for this age group.</p>
+    <div class="stat-highlight"><svg class="stat-svg"></svg><span>3 permanent unlocks, 0 resets</span></div>
     <div class="shot-frame"><img src="town-progression.jpg" alt="Town progression mockup — bridge repaired, library built, treehouse unlocked, full design annotations included"></div>
   </div>
 </section>
@@ -209,6 +220,7 @@
   <div class="narrow">
     <h2>One engine. Every literacy skill.</h2>
     <p>The theme choice, the confidence-check layer, and the adaptation logic never change. Only the content underneath swaps — so a new phoneme set, blend, or sight-word skill ships without new code.</p>
+    <div class="stat-highlight on-dark"><svg class="stat-svg"></svg><span>1 engine, 5+ literacy skills</span></div>
     <div class="pipeline">
       <div class="pipe-step">Autonomy Gate<br><span style="opacity:0.6">Forest / Beach / Mountain skin</span></div>
       <div class="pipe-arrow">→</div>
@@ -239,6 +251,66 @@
 <footer>
   Prepared by Chloé Newell — Learning Designer &amp; Instructional Systems Architect · <a href="https://chloenewell.github.io">chloenewell.github.io</a>
 </footer>
+
+<script>
+  function drawStatCircles(){
+    var highlights = document.querySelectorAll('.stat-highlight');
+    highlights.forEach(function(el){
+      var svg = el.querySelector('.stat-svg');
+      if (!svg) return;
+      var w = el.offsetWidth, h = el.offsetHeight;
+      if (!w || !h) return;
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+
+      var l = w * 0.025, r = w * 0.975, t = h * 0.06, b = h * 0.94;
+      var midx = w / 2, midy = h / 2;
+      var d = 'M ' + l + ',' + midy +
+        ' C ' + l + ',' + (t + h * 0.05) + ' ' + (midx - w * 0.28) + ',' + (t - h * 0.02) + ' ' + midx + ',' + t +
+        ' C ' + (midx + w * 0.3) + ',' + (t - h * 0.02) + ' ' + r + ',' + (t + h * 0.05) + ' ' + r + ',' + midy +
+        ' C ' + r + ',' + (b - h * 0.05) + ' ' + (midx + w * 0.28) + ',' + (b + h * 0.02) + ' ' + midx + ',' + b +
+        ' C ' + (midx - w * 0.3) + ',' + (b + h * 0.02) + ' ' + l + ',' + (b - h * 0.05) + ' ' + l + ',' + midy + ' Z';
+
+      svg.innerHTML = '';
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', d);
+      svg.appendChild(path);
+
+      var len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+
+      if (el.dataset.drawn === 'true') {
+        path.style.transition = 'none';
+        path.style.strokeDashoffset = '0';
+      } else {
+        path.style.strokeDashoffset = len;
+      }
+    });
+  }
+
+  drawStatCircles();
+
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(drawStatCircles, 150);
+  });
+
+  var statObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        entry.target.dataset.drawn = 'true';
+        var path = entry.target.querySelector('.stat-svg path');
+        if (path) path.style.strokeDashoffset = '0';
+        statObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-highlight').forEach(function(el){
+    el.dataset.drawn = 'false';
+    statObserver.observe(el);
+  });
+</script>
 
 </body>
 </html>
