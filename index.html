@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoneme Patrol — Case Study — Chloé Newell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1F3A61; --blue:#368ADD; --mint:#76D59F; --cream:#F3E3B4;
+    --white:#FFFFFF; --off-white:#F7F9FC;
+    --ink:#18233A; --ink-soft:rgba(24,35,58,0.68);
+    --cream-ink:rgba(255,255,255,0.86); --cream-ink-dim:rgba(255,255,255,0.55);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--off-white); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.6;}
+  a{color:inherit;}
+  :focus-visible{outline:3px solid var(--blue); outline-offset:3px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase;}
+
+  .topbar{
+    position:sticky; top:0; z-index:60; background:var(--navy); color:var(--cream-ink);
+    padding:16px 5vw; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+  }
+  .topbar a{font-family:'IBM Plex Mono',monospace; font-size:13px; text-decoration:none; color:var(--cream-ink);}
+  .topbar a:hover{color:var(--cream);}
+  .topbar .mark{font-family:'Fraunces',serif; font-weight:600;}
+
+  section{padding:76px 7vw;}
+  .narrow{max-width:900px; margin:0 auto;}
+
+  /* Hero */
+  .hero{
+    background:var(--navy); color:var(--cream-ink);
+    display:flex; flex-wrap:wrap; gap:5vw; align-items:flex-start; padding:56px 7vw 64px;
+  }
+  .hero-text{flex:1 1 420px; padding-top:6px;}
+  .hero .eyebrow{color:var(--cream); margin-bottom:16px;}
+  .hero h1{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(38px,5.5vw,60px); margin:0 0 18px; line-height:1.05;}
+  .hero p{color:var(--cream-ink-dim); font-size:17px; max-width:46ch; margin:0 0 20px;}
+  .hero .meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--cream-ink-dim);}
+  .hero-img{
+    flex:1 1 460px; max-width:640px; aspect-ratio:3/2; border-radius:8px; overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,0.4);
+  }
+  .hero-img img{display:block; width:100%; height:100%; object-fit:cover;}
+
+  /* Problem */
+  .problem{background:var(--off-white);}
+  .problem .grid{display:flex; flex-wrap:wrap; gap:6vw; align-items:center;}
+  .problem-text{flex:1 1 420px;}
+  .problem-teaser{flex:0 1 260px; text-align:center;}
+  .problem-teaser img{
+    width:100%; max-width:260px; border-radius:8px; box-shadow:0 20px 50px rgba(24,35,58,0.16);
+    border:1px solid rgba(24,35,58,0.08);
+  }
+  .teaser-cap{
+    display:block; margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    color:var(--ink-soft); letter-spacing:0.03em;
+  }
+  .bignum{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(64px,9vw,120px); color:var(--navy); line-height:1; margin-bottom:28px;}
+  .bignum span{display:block; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-soft); font-weight:400; letter-spacing:0.04em; margin-top:8px;}
+  .problem p{font-size:19px; color:var(--ink-soft); max-width:44ch; margin:0;}
+  .problem strong{color:var(--ink);}
+
+  /* Idea */
+  .idea{background:var(--navy); color:var(--white); text-align:center;}
+  .idea p{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:500;
+    font-size:clamp(24px,3.4vw,38px); max-width:26ch; margin:0 auto; line-height:1.3;
+  }
+  .idea p strong{font-style:normal; font-weight:700; color:var(--mint);}
+
+  /* Screenshot sections */
+  .shot-section{background:var(--white);}
+  .shot-section .eyebrow{color:var(--blue); margin-bottom:10px;}
+  .shot-section h2{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(26px,3.6vw,38px); margin:0 0 14px;}
+  .shot-section p.lead{font-size:16.5px; color:var(--ink-soft); max-width:60ch; margin:0 0 34px;}
+  .shot-frame{border-radius:8px; overflow:hidden; box-shadow:0 24px 60px rgba(24,35,58,0.18); border:1px solid rgba(24,35,58,0.08);}
+  .shot-frame img{display:block; width:100%; height:auto;}
+  .shot-section.alt{background:var(--off-white);}
+
+  /* Adapts — 3 branches */
+  .branches{display:flex; flex-wrap:wrap; gap:22px; margin-top:10px;}
+  .branch-card{flex:1 1 260px; background:var(--off-white); border-radius:8px; padding:26px 22px; border-top:4px solid var(--mint);}
+  .branch-card.amber{border-top-color:var(--cream);}
+  .branch-card.blue{border-top-color:var(--blue);}
+  .branch-card .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; display:block;}
+  .branch-card h3{font-family:'Fraunces',serif; font-size:19px; margin:0 0 10px;}
+  .branch-card p{font-size:14.5px; color:var(--ink-soft); margin:0;}
+
+  /* Scale */
+  .scale{background:var(--navy); color:var(--cream-ink);}
+  .scale h2{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(26px,3.6vw,38px); margin:0 0 16px; color:var(--white);}
+  .scale p{color:var(--cream-ink-dim); font-size:16.5px; max-width:62ch; margin:0 0 30px;}
+  .pipeline{display:flex; align-items:center; gap:0; flex-wrap:wrap;}
+  .pipe-step{
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:6px;
+    padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--cream-ink);
+    flex:1 1 160px;
+  }
+  .pipe-arrow{color:var(--mint); font-size:20px; padding:0 14px; flex:0 0 auto;}
+  .pipe-note{margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--cream-ink-dim);}
+  .variants-frame{
+    margin-top:34px; background:var(--white); border-radius:8px; padding:14px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.3);
+  }
+  .variants-frame img{display:block; width:100%; height:auto; border-radius:4px;}
+
+  /* Design principles - condensed */
+  .principles{background:var(--off-white);}
+  .principles h2{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(26px,3.6vw,38px); margin:0 0 30px;}
+  .plist{display:flex; flex-wrap:wrap; gap:0 40px;}
+  .plist div{flex:1 1 380px; padding:16px 0; border-bottom:1px solid rgba(24,35,58,0.1); display:flex; gap:14px;}
+  .plist .n{font-family:'IBM Plex Mono',monospace; color:var(--blue); font-size:13px; flex:0 0 24px;}
+  .plist p{margin:0; font-size:14.5px; color:var(--ink-soft);}
+  .plist p strong{color:var(--ink); font-weight:600;}
+  .plist-extra{display:flex; flex-wrap:wrap; gap:32px; align-items:center; margin-top:8px; padding-top:26px; border-top:1px solid rgba(24,35,58,0.1);}
+  .plist-extra-text{flex:1 1 380px;}
+  .plist-extra-text div{padding:16px 0; display:flex; gap:14px;}
+  .plist-extra-text .n{font-family:'IBM Plex Mono',monospace; color:var(--blue); font-size:13px; flex:0 0 24px;}
+  .plist-extra-text p{margin:0; font-size:14.5px; color:var(--ink-soft);}
+  .plist-extra-text p strong{color:var(--ink); font-weight:600;}
+  .plist-extra-img{flex:0 0 140px;}
+  .plist-extra-img img{width:100%; border-radius:8px; box-shadow:0 16px 36px rgba(24,35,58,0.16);}
+
+  footer{background:var(--navy); color:var(--cream-ink-dim); padding:6vh 7vw; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px;}
+  footer a{color:var(--cream);}
+
+  @media (max-width:800px){
+    .problem .grid{text-align:left;}
+    section{padding:56px 6vw;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="mark">Chloé Newell</span>
+  <a href="https://chloenewell.github.io">← Back to Portfolio</a>
+</div>
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">Case Study · Adaptive Game Design · Early Childhood Literacy</span>
+    <h1>Phoneme Patrol</h1>
+    <p>A phonics adventure for ages 4–6 that measures more than right or wrong — it reads how <em>sure</em> a child is, and quietly adapts the path forward.</p>
+    <div class="meta">CCSS.ELA-Literacy.RF.K.2.D · Isolate &amp; Blend CVC Phonemes · Concept for Age of Learning / ABCmouse</div>
+  </div>
+  <div class="hero-img"><img src="hero-mouse.jpg" alt="Phoneme Patrol title screen — ABC the Mouse at the edge of the world he's about to rebuild"></div>
+</section>
+
+<section class="problem">
+  <div class="narrow grid">
+    <div class="problem-text">
+      <div class="bignum" style="font-size:clamp(38px,5.5vw,64px); line-height:1.08;">Right or wrong.<br>That's all most<br>phonics apps see.</div>
+      <p><strong>Accuracy alone can't tell the difference</strong> between a child who's genuinely struggling and one who froze, guessed, or quietly disengaged — they look identical on paper. That's the gap this concept is designed to close.</p>
+    </div>
+    <div class="problem-teaser">
+      <img src="confidence-panel.jpg" alt="A preview of the confidence-check choice panel — I know it, I think so, I'm guessing">
+      <span class="teaser-cap">The missing piece — coming up next ↓</span>
+    </div>
+  </div>
+</section>
+
+<section class="idea">
+  <p>What if the game measured <strong>how sure</strong> a child was — not just whether they were right?</p>
+</section>
+
+<section class="shot-section">
+  <div class="narrow">
+    <span class="eyebrow">The Core Loop</span>
+    <h2>One extra tap. A completely different signal.</h2>
+    <p class="lead">Before ABC celebrates, the child answers one more question: <em>I know it, I think so, or I'm guessing?</em> That single tap is what the rest of the system runs on.</p>
+    <div class="shot-frame"><img src="core-loop.jpg" alt="Confidence Check gameplay mockup — child taps a letter, then rates how sure they were, full design annotations included"></div>
+  </div>
+</section>
+
+<section class="shot-section alt">
+  <div class="narrow">
+    <span class="eyebrow">How It Adapts</span>
+    <h2>Three outcomes, one invisible engine.</h2>
+    <div class="branches">
+      <div class="branch-card">
+        <span class="tag">Correct + "I'm guessing"</span>
+        <h3>Quietly reinforce</h3>
+        <p>Celebrates and moves forward, but flags a similar phoneme to resurface later in the session — no visible penalty, just spaced practice.</p>
+      </div>
+      <div class="branch-card blue">
+        <span class="tag">Correct + "I know it!"</span>
+        <h3>Skip ahead</h3>
+        <p>Bypasses repetitive foundational reps and accelerates difficulty, so a confident learner never gets bored waiting for the game to catch up.</p>
+      </div>
+      <div class="branch-card amber">
+        <span class="tag">Incorrect + "I know it!"</span>
+        <h3>Catch the real gap</h3>
+        <p>A confident wrong answer is the strongest misconception signal in the system — it triggers a visual hint before frustration has a chance to set in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shot-section">
+  <div class="narrow">
+    <span class="eyebrow">Why Kids Come Back</span>
+    <h2>Progress they can see, not a number that resets.</h2>
+    <p class="lead">Materials earned from each phoneme run go straight into rebuilding ABC's town — a bridge, a library, a treehouse. Visible, permanent change beats an abstract coin counter for this age group.</p>
+    <div class="shot-frame"><img src="town-progression.jpg" alt="Town progression mockup — bridge repaired, library built, treehouse unlocked, full design annotations included"></div>
+  </div>
+</section>
+
+<section class="scale">
+  <div class="narrow">
+    <h2>One engine. Every literacy skill.</h2>
+    <p>The theme choice, the confidence-check layer, and the adaptation logic never change. Only the content underneath swaps — so a new phoneme set, blend, or sight-word skill ships without new code.</p>
+    <div class="pipeline">
+      <div class="pipe-step">Autonomy Gate<br><span style="opacity:0.6">Forest / Beach / Mountain skin</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">Confidence Layer<br><span style="opacity:0.6">Fixed across every skill</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">Content Swap<br><span style="opacity:0.6">Phonemes, blends, digraphs, sight words, word families</span></div>
+    </div>
+    <div class="pipe-note">Same pattern as Trench Run's engine — the passage and the chain-links change, the system doesn't.</div>
+    <div class="variants-frame"><img src="content-variants.jpg" alt="Five swappable content variants on the same engine — phonemes, blends, digraphs, sight words, word families"></div>
+  </div>
+</section>
+
+<section class="principles">
+  <div class="narrow">
+    <span class="eyebrow" style="color:var(--blue);">Design Principles</span>
+    <h2>What kept every decision honest.</h2>
+    <div class="plist">
+      <div><span class="n">01</span><p><strong>No timers.</strong> Protects completion for slower-processing profiles.</p></div>
+      <div><span class="n">02</span><p><strong>Audio-first.</strong> Emerging readers navigate without needing an adult.</p></div>
+      <div><span class="n">03</span><p><strong>One-tap interactions.</strong> No drag-and-drop for early motor control.</p></div>
+      <div><span class="n">04</span><p><strong>Short, focused rounds.</strong> Matched to a 4–6-year-old's attention span.</p></div>
+      <div><span class="n">05</span><p><strong>No ads, no chat.</strong> A safe, age-appropriate space by default.</p></div>
+      <div><span class="n">06</span><p><strong>Data that empowers.</strong> Insights educators and families can actually use.</p></div>
+    </div>
+    <div class="plist-extra">
+      <div class="plist-extra-text">
+        <div><span class="n">07</span><p><strong>Character &amp; story.</strong> A relatable guide leads kids through a safe, familiar world they help rebuild — building connection, curiosity, and emotional investment.</p></div>
+        <div><span class="n">08</span><p><strong>Player autonomy.</strong> ABC chooses their environment before a single lesson starts — feeling in control up front drives engagement through everything after.</p></div>
+      </div>
+      <div class="plist-extra-img"><img src="choose-path.jpg" alt="ABC the Mouse choosing between Forest, Beach, and Mountain paths"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Prepared by Chloé Newell — Learning Designer &amp; Instructional Systems Architect · <a href="https://chloenewell.github.io">chloenewell.github.io</a>
+</footer>
+
+</body>
+</html>
